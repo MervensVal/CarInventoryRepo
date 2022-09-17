@@ -1,8 +1,10 @@
 using CarInventoryAPI.CarData;
+using CarInventoryAPI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +29,9 @@ namespace CarInventoryAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<ICarRepository, CarRepository>();
+            services.AddDbContextPool<CarContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarContextConnectionString")));
+            //services.AddSingleton<ICarRepository, CarRepository>();
+            services.AddScoped<ICarRepository, CarRepositoryUsingEFC>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
